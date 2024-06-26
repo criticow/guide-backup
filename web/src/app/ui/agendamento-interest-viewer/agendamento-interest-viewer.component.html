@@ -1,0 +1,83 @@
+@if(agendamento$ | async; as agendamento) {
+  <div class="fixed inset-0 px-4 py-40 flex items-center justify-center z-50">
+    <div class="absolute inset-0 bg-black opacity-25 z-50"></div>
+    <div class="relative flex flex-col gap-4 w-full h-full p-4 bg-white z-50 rounded-md lg:max-w-4xl">
+      <div class="flex items-center justify-between">
+        <p class="font-bold">Motoristas agendamento {{agendamento.id}}</p>
+        <button (click)="onClose()" class="flex justify-center items-center rounded-md border p-2 h-10 w-10 focus:outline-guide-gray">
+          <ui-icon name="x-mark-outline" class="w-5 h-5" />
+        </button>
+      </div>
+      <div #interestSegment class="relative grid grid-cols-2 mt-2">
+        <button
+          (click)="isYesOpen = false"
+          [ngClass]="{'bg-gray-100' : !isYesOpen}"
+          class="relative ion-activatable text-center font-medium p-2 focus:outline-guide-gray"
+        >
+          NÃO
+        </button>
+        <button
+          (click)="isYesOpen = true"
+          [ngClass]="{'bg-gray-100' : isYesOpen}"
+          class="relative ion-activatable text-center font-medium p-2 focus:outline-guide-gray"
+        >
+          SIM
+        </button>
+        <div class="absolute bottom-0 left-0 right-0">
+          <div
+            [ngClass]="{'translate-x-full' : isYesOpen}"
+            class="h-1 w-2/4 border-b border-b-guide-gray transition-transform"
+          >
+          </div>
+        </div>
+      </div>
+      <div class="grow overflow-y-auto">
+        @if(isYesOpen) {
+          @for(interesse of agendamento.motoristasInteressados; track interesse.order) {
+            <div
+              class="relative flex items-center justify-between h-max p-2 border-b pr-12"
+              [ngClass]="{'bg-green-100' : agendamento.motorista?.id === interesse.motorista.id}"
+            >
+              <div class="flex items-center overflow-hidden">
+                <div class="flex rounded-full border">
+                  <ui-icon name="user-circle-outline" class="h-9 w-9" />
+                </div>
+                <p class="ml-2 text-sm whitespace-nowrap">{{interesse.order}} - {{interesse.motorista.nome}}</p>
+              </div>
+              @if(agendamento.motorista?.id !== interesse.motorista.id) {
+                <button
+                  (click)="connectMotorista(interesse.motoristaId)"
+                  class="absolute right-0 flex justify-center items-center rounded-md border p-2 h-10 w-10 bg-white focus:outline-guide-gray"
+                >
+                  <ui-icon name="hand-thumb-up-outline" class="w-5 h-5" />
+                </button>
+              }
+            </div>
+          }
+        } @else {
+          @for(interesse of agendamento.motoristasNaoInteressados; track interesse.order) {
+            <div
+              class="relative flex items-center justify-between h-max p-2 border-b pr-12"
+              [ngClass]="{'bg-green-100' : agendamento.motorista?.id === interesse.motorista.id}"
+            >
+              <div class="flex items-center overflow-hidden">
+                <div class="flex rounded-full border">
+                  <ui-icon name="user-circle-outline" class="h-9 w-9" />
+                </div>
+                <p class="ml-2 text-sm whitespace-nowrap">{{interesse.order}} - {{interesse.motorista.nome}}</p>
+              </div>
+              @if(agendamento.motorista?.id !== interesse.motorista.id) {
+                <button
+                  (click)="connectMotorista(interesse.motoristaId)"
+                  class="absolute right-0 flex justify-center items-center rounded-md border p-2 h-10 w-10 bg-white focus:outline-guide-gray"
+                >
+                  <ui-icon name="hand-thumb-up-outline" class="w-5 h-5" />
+                </button>
+              }
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+}

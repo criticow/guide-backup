@@ -1,0 +1,306 @@
+<div class="fixed inset-0 flex items-center justify-center p-4 z-50">
+  <div class="absolute inset-0 bg-black opacity-25"></div>
+  <div class="relative grid gap-4 auto-rows-max w-full p-4 bg-white rounded-md shadow-lg lg:max-w-4xl">
+    <div class="flex justify-between items-center">
+      <div>
+        <p class="font-medium text-sm">{{agendamentoId ? 'Editar agendamento ' + agendamento.id : 'Criar novo agendamento'}}</p>
+        @if(agendamento.createdAt) {
+          <p class="text-xs">Criado em: {{utilService.formatISODate(agendamento.createdAt)}}</p>
+        }
+      </div>
+      <button (click)="onClose()" class="flex justify-center items-center rounded-md border p-2 h-10 w-10 focus:outline-guide-gray">
+        <ui-icon name="x-mark-outline" class="w-5 h-5" />
+      </button>
+    </div>
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+      <div class="grid grid-cols-12 gap-2 p-4 border rounded-md md:gap-6">
+        <div class="col-span-6 md:col-span-3">
+          <label for="data" class="font-medium text-xs block mb-1 md:text-sm">Data</label>
+          <div class="relative flex items-center">
+            <input
+              #dataInput
+              id="data"
+              name="data"
+              placeholder="DD/MM/AAAA"
+              dateMask
+              [useBRFormat]="false"
+              [keepCharacters]="true"
+              [onlyGreaterDates]="true"
+              [(ngModel)]="agendamento.data"
+              autocomplete="off"
+              type="text"
+              class="basic-input px-2 py-1 pr-7"
+              inputmode="numeric"
+              required
+            />
+            @if(agendamento.data) {
+              <button
+                type="button"
+                tabindex="-1"
+                (click)="agendamento.data = ''; dataInput.focus()"
+                class="absolute flex items-center justify-center h-full p-2 right-0 rounded-e m-0.5 focus:outline-guide-gray"
+              >
+                <ui-icon name="x-circle-outline" class="w-4 h-4" />
+              </button>
+            }
+          </div>
+        </div>
+        <div class="col-span-6 md:col-span-2">
+          <label for="hora" class="font-medium text-xs block mb-1 md:text-sm">Hora</label>
+          <div class="relative flex items-center">
+            <input
+              #horaInput
+              id="hora"
+              name="hora"
+              placeholder="HH:mm"
+              [keepCharacters]="true"
+              timeMask
+              [(ngModel)]="agendamento.hora"
+              autocomplete="off"
+              type="text"
+              class="basic-input px-2 py-1 pr-7"
+              inputmode="numeric"
+              required
+            />
+            @if(agendamento.hora) {
+              <button
+                type="button"
+                tabindex="-1"
+                (click)="agendamento.hora = ''; horaInput.focus()"
+                class="absolute flex items-center justify-center h-full p-2 right-0 rounded-e m-0.5 focus:outline-guide-gray"
+              >
+                <ui-icon name="x-circle-outline" class="w-4 h-4" />
+              </button>
+            }
+          </div>
+        </div>
+        <div class="col-span-4 md:col-span-2">
+          <label for="quilometrosRodados" class="font-medium text-xs block mb-1 md:text-sm">KM Rodados</label>
+          <div class="relative flex items-center">
+            <input
+              #quilometrosRodadosInput
+              id="quilometrosRodados"
+              name="quilometrosRodados"
+              placeholder="0,00 km"
+              (keyup)="updateValorProposto()"
+              sufix=" km"
+              currencyMask
+              [isNumeric]="true"
+              [(ngModel)]="agendamento.quilometrosRodados"
+              autocomplete="off"
+              type="text"
+              class="basic-input px-2 py-1 pr-7"
+              inputmode="numeric"
+              required
+            />
+            @if(agendamento.quilometrosRodados) {
+              <button
+                type="button"
+                tabindex="-1"
+                (click)="agendamento.quilometrosRodados = 0; quilometrosRodadosInput.focus()"
+                class="absolute flex items-center justify-center h-full p-2 right-0 rounded-e m-0.5 focus:outline-guide-gray"
+              >
+                <ui-icon name="x-circle-outline" class="w-4 h-4" />
+              </button>
+            }
+          </div>
+        </div>
+        <div class="col-span-4 md:col-span-2">
+          <label for="valorQuilometro" class="font-medium text-xs block mb-1 md:text-sm">Valor KM</label>
+          <div class="relative flex items-center">
+            <input
+              #valorQuilometroInput
+              id="valorQuilometro"
+              name="valorQuilometro"
+              placeholder="R$ 0,00"
+              currencyMask
+              [isNumeric]="true"
+              (keyup)="updateValorProposto()"
+              prefix="R$ "
+              [(ngModel)]="agendamento.valorQuilometro"
+              autocomplete="off"
+              type="text"
+              class="basic-input px-2 py-1 pr-7"
+              inputmode="numeric"
+              required
+            />
+            @if(agendamento.valorQuilometro) {
+              <button
+                type="button"
+                tabindex="-1"
+                (click)="agendamento.valorQuilometro = 0; valorQuilometroInput.focus()"
+                class="absolute flex items-center justify-center h-full p-2 right-0 rounded-e m-0.5 focus:outline-guide-gray"
+              >
+                <ui-icon name="x-circle-outline" class="w-4 h-4" />
+              </button>
+            }
+          </div>
+        </div>
+        <div class="col-span-4 md:col-span-3">
+          <label for="valorProposto" class="font-medium text-xs block mb-1 md:text-sm">Vlr Proposto</label>
+          <div class="relative flex items-center">
+            <input
+              id="valorProposto"
+              name="valorProposto"
+              placeholder="R$ 0,00"
+              currencyMask
+              [isNumeric]="true"
+              prefix="R$ "
+              [(ngModel)]="valorProposto"
+              readonly
+              autocomplete="off"
+              type="text"
+              class="basic-input px-2 py-1"
+              required
+            />
+          </div>
+        </div>
+        <div class="col-span-12 md:col-span-6">
+          <label for="cliente" class="font-medium text-xs block mb-1 md:text-sm">Cliente</label>
+          <div class="relative flex items-center">
+            <input
+              #clienteInput
+              id="cliente"
+              name="cliente"
+              placeholder="Nome completo do cliente"
+              [(ngModel)]="agendamento.cliente"
+              autocomplete="off"
+              type="text"
+              class="basic-input px-2 py-1 pr-7"
+              required
+            />
+            @if(agendamento.cliente) {
+              <button
+                type="button"
+                tabindex="-1"
+                (click)="agendamento.cliente = ''; clienteInput.focus()"
+                class="absolute flex items-center justify-center h-full p-2 right-0 rounded-e m-0.5 focus:outline-guide-gray"
+              >
+                <ui-icon name="x-circle-outline" class="w-4 h-4" />
+              </button>
+            }
+          </div>
+        </div>
+        <div class="col-span-12 md:col-span-6">
+          <label for="passageiro" class="font-medium text-xs block mb-1 md:text-sm">Passageiro</label>
+          <div class="relative flex items-center">
+            <input
+              #passageiroInput
+              id="passageiro"
+              name="passageiro"
+              placeholder="Nome completo do passageiro"
+              [(ngModel)]="agendamento.passageiro"
+              autocomplete="off"
+              type="text"
+              class="basic-input px-2 py-1 pr-7"
+              required
+            />
+            @if(agendamento.passageiro) {
+              <button
+                type="button"
+                tabindex="-1"
+                (click)="agendamento.passageiro = ''; passageiroInput.focus()"
+                class="absolute flex items-center justify-center h-full p-2 right-0 rounded-e m-0.5 focus:outline-guide-gray"
+              >
+                <ui-icon name="x-circle-outline" class="w-4 h-4" />
+              </button>
+            }
+          </div>
+        </div>
+        <div class="col-span-12 md:col-span-6">
+          <label for="embarque" class="font-medium text-xs block mb-1 md:text-sm">Embarque</label>
+          <div class="relative flex items-center">
+            <input
+              #embarqueInput
+              id="embarque"
+              name="embarque"
+              placeholder="Endereço de embarque"
+              [(ngModel)]="agendamento.embarque"
+              autocomplete="off"
+              type="text"
+              class="basic-input px-2 py-1 pr-7"
+              required
+            />
+            @if(agendamento.embarque) {
+              <button
+                type="button"
+                tabindex="-1"
+                (click)="agendamento.embarque = ''; embarqueInput.focus()"
+                class="absolute flex items-center justify-center h-full p-2 right-0 rounded-e m-0.5 focus:outline-guide-gray"
+              >
+                <ui-icon name="x-circle-outline" class="w-4 h-4" />
+              </button>
+            }
+          </div>
+        </div>
+        <div class="col-span-12 md:col-span-6">
+          <label for="desembarque" class="font-medium text-xs block mb-1 md:text-sm">Desembarque</label>
+          <div class="relative flex items-center">
+            <input
+              #desembarqueInput
+              id="desembarque"
+              name="desembarque"
+              placeholder="Endereço de desembarque"
+              [(ngModel)]="agendamento.desembarque"
+              autocomplete="off"
+              type="text"
+              class="basic-input px-2 py-1 pr-7"
+              required
+            />
+            @if(agendamento.desembarque) {
+              <button
+                type="button"
+                tabindex="-1"
+                (click)="agendamento.desembarque = ''; desembarqueInput.focus()"
+                class="absolute flex items-center justify-center h-full p-2 right-0 rounded-e m-0.5 focus:outline-guide-gray"
+              >
+                <ui-icon name="x-circle-outline" class="w-4 h-4" />
+              </button>
+            }
+          </div>
+        </div>
+        <div class="relative col-span-12 md:col-span-6">
+          <label for="trajeto" class="font-medium text-xs block mb-1 md:text-sm">Trajeto</label>
+          <div class="relative flex items-center">
+            <input
+              #trajetoInput
+              id="trajeto"
+              name="trajeto"
+              placeholder="Link do trajeto"
+              [(ngModel)]="agendamento.trajeto"
+              autocomplete="off"
+              type="text"
+              class="basic-input px-2 py-1 pr-7"
+              required
+            />
+            @if(agendamento.trajeto) {
+              <button
+                type="button"
+                tabindex="-1"
+                (click)="agendamento.trajeto = ''; trajetoInput.focus()"
+                class="absolute flex items-center justify-center h-full p-2 right-0 rounded-e m-0.5 focus:outline-guide-gray"
+              >
+                <ui-icon name="x-circle-outline" class="w-4 h-4" />
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-4 justify-end mt-4">
+        <button 
+          type="button"
+          (click)="onClose()"
+          class="rounded-md bg-red-500 text-white text-sm font-medium px-4 py-2 focus:outline-guide-gray"
+        >
+          Cancelar
+        </button>
+        <button 
+          [disabled]="!form.form.valid || !isFormValid()"
+          class="rounded-md bg-guide-teal disabled:opacity-25 text-white text-sm font-medium px-4 py-2 focus:outline-guide-gray"
+        >
+          Salvar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

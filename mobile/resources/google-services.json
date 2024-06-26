@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "147905095305",
+    "project_id": "guide-agendamentos",
+    "storage_bucket": "guide-agendamentos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:147905095305:android:008ba2369600123b704858",
+        "android_client_info": {
+          "package_name": "br.com.goguide.agendamentos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB90e7qMjpFieZxV_7kJoVROs57mLHOPqo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

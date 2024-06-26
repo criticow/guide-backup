@@ -1,0 +1,25 @@
+<ion-content class="ion-bg-slate-100 ion-pt-16">
+  <div class="grid gap-4 p-4">
+    @if(false) {
+      <!-- Implement the current agendamento -->
+    } @else {
+      <div class="grid gap-4 p-4 border shadow-lg text-center rounded-md bg-white w-full">
+        <p class="font-medium text-xl">Opções</p>
+        <button
+          class="relative ion-activatable bg-guide-gray disabled:opacity-25 text-white font-bold w-full focus:outline-none rounded-md p-4 py-2"
+          routerLink="/corridas-disponiveis"
+        >
+          Agendamentos Disponíveis
+          <ion-ripple-effect></ion-ripple-effect>
+        </button>
+        <button 
+          class="relative ion-activatable bg-guide-gray disabled:opacity-25 text-white font-bold w-full focus:outline-none rounded-md p-4 py-2"
+          routerLink="/minhas-corridas"
+        >
+          Meus Agendamentos
+          <ion-ripple-effect></ion-ripple-effect>
+        </button>
+      </div>
+    }
+  </div>
+</ion-content>

@@ -1,0 +1,58 @@
+<div (click)="handleMenuState()" class="flex items-center justify-center w-max p-2.5 bg-white rounded-md">
+  <ui-icon name="bars-3-bottom-left-outline" class="w-6 h-6 text-gray-800" />
+</div>
+
+<div
+  (click)="handleMenuState()"
+  class="absolute z-50 bg-black opacity-25 top-0 left-0 w-full h-screen delay-0"
+  [ngClass]="isOpen ? 'block' : 'hidden'"
+>
+</div>
+
+<div
+  class="fixed flex flex-col top-0 left-0 bg-white w-64 p-4 h-screen z-50 transition-transform -translate-x-full"
+  [ngClass]="{'translate-x-0' : isOpen}"
+>
+  <div class="flex gap-2 items-center">
+    <ui-icon name="guide-logo" class="h-8 w-8 text-guide-teal" />
+    <p class="font-bold text-2xl text-guide-gray">GUIDE</p>
+  </div>
+  <div class="border-b border-b-gray-800 h-1 my-2 w-full"></div>
+  <ul class="grid gap-2">
+    <li
+      routerLink="/home"
+      (click)="handleMenuState()"
+      class="relative ion-activatable bg-guide-gray disabled:opacity-25 text-white text-sm font-bold w-full focus:outline-none rounded-md p-4 py-2"
+    >
+      Início
+      <ion-ripple-effect></ion-ripple-effect>
+    </li>
+    <li
+      routerLink="/corridas-disponiveis"
+      (click)="handleMenuState()"
+      class="relative ion-activatable bg-guide-gray disabled:opacity-25 text-white text-sm font-bold w-full focus:outline-none rounded-md p-4 py-2"
+    >
+      Agendamentos Disponíveis
+      <ion-ripple-effect></ion-ripple-effect>
+    </li>
+    <li
+      routerLink="/minhas-corridas"
+      (click)="handleMenuState()"
+      class="relative ion-activatable bg-guide-gray disabled:opacity-25 text-white text-sm font-bold w-full focus:outline-none rounded-md p-4 py-2"
+    >
+      Meus Agendamentos
+      <ion-ripple-effect></ion-ripple-effect>
+    </li>
+  </ul>
+  <div class="grow"></div>
+  <button
+    (click)="logout()"
+    class="relative ion-activatable text-sm font-medium p-2 w-full bg-guide-teal text-white rounded-md"
+  >
+    Sair
+    <ion-ripple-effect></ion-ripple-effect>
+  </button>
+  @if(appVersion) {
+    <p class="font-medium text-center text-xs mt-4">Versão: {{appVersion}}</p>
+  }
+</div>

@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// datasource db {
+//   provider = "sqlite"
+//   url      = env("DATABASE_URL")
+// }
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Motorista {
+  id                       Int                       @id @default(autoincrement())
+  nome                     String
+  cpf                      String                    @unique
+  dataNascimento           DateTime
+  whatsapp                 String
+  cnh                      String
+  token                    String?
+  senha                    String?
+  activeCorridaId          Int?
+  corridas                 Corrida[]                 @relation("MotoristaPrincipal")
+  corridasInteressantes    MotoristaInteressado[]
+  corridasNaoInteressantes MotoristaNaoInteressado[]
+  veiculo                  Veiculo?                  @relation(fields: [veiculoId], references: [id])
+  veiculoId                Int?
+  online                   Boolean
+}
+
+model Corrida {
+  id                        Int                       @id @default(autoincrement())
+  createdAt                 DateTime
+  notificatedAt             DateTime?
+  cliente                   String
+  passageiro                String
+  motoristasInteressados    MotoristaInteressado[]
+  motoristasNaoInteressados MotoristaNaoInteressado[]
+  motorista                 Motorista?                @relation("MotoristaPrincipal", fields: [motoristaId], references: [id])
+  motoristaId               Int?
+  dataHora                  DateTime
+  valorQuilometro           Int
+  quilometrosRodados        Int
+  embarque                  String
+  desembarque               String
+  trajeto                   String
+  status                    StatusCorrida             @relation(fields: [statusId], references: [id])
+  statusId                  Int
+  atualizacao               AtualizacaoCorrida[]
+}
+
+model AtualizacaoCorrida {
+  id        Int           @id @default(autoincrement())
+  createdAt DateTime
+  corridaId Int
+  corrida   Corrida       @relation(fields: [corridaId], references: [id])
+  statusId  Int
+  status    StatusCorrida @relation(fields: [statusId], references: [id])
+}
+
+model MotoristaInteressado {
+  motoristaId Int
+  corridaId   Int
+  order       Int
+  motorista   Motorista @relation(fields: [motoristaId], references: [id])
+  corrida     Corrida   @relation(fields: [corridaId], references: [id])
+
+  @@id([motoristaId, corridaId])
+  @@unique([motoristaId, corridaId])
+}
+
+model MotoristaNaoInteressado {
+  motoristaId Int
+  corridaId   Int
+  order       Int
+  motorista   Motorista @relation(fields: [motoristaId], references: [id])
+  corrida     Corrida   @relation(fields: [corridaId], references: [id])
+
+  @@id([motoristaId, corridaId])
+  @@unique([motoristaId, corridaId])
+}
+
+model Veiculo {
+  id        Int         @id @default(autoincrement())
+  place     String
+  modelo    String
+  Motorista Motorista[]
+}
+
+model StatusCorrida {
+  id          Int                  @id @default(autoincrement())
+  descricao   String
+  corridas    Corrida[]
+  atualizacao AtualizacaoCorrida[]
+}

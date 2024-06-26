@@ -1,0 +1,15 @@
+<ion-app>
+  @if(globalService.getIsAuthenticated()) {
+    <ion-header class="relative ion-no-border px-4 py-2 pt-4 flex justify-between items-center bg-slate-100">
+      <ui-sidenav />
+      <ui-current-agendamento />
+      <ui-status-toggle />
+    </ion-header>
+    <ui-notification-viewer />
+  }
+
+  <ion-router-outlet></ion-router-outlet>
+
+  <ui-alert-toast />
+  <ui-loader />
+</ion-app>

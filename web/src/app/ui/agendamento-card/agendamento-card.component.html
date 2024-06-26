@@ -1,0 +1,114 @@
+<div class="grid gap-4 shadow-lg p-4 rounded-md border border-gray-200">
+  <div class="relative flex justify-between items-center">
+    <div class="flex items-center gap-4">
+      <button (click)="isCardOpen = !isCardOpen" class="text-left focus:outline-guide-gray px-2 py-1">
+        <p class="font-bold">
+          Agendamento {{agendamento.id}}
+        </p>
+        <p class="text-xs">Criado em: {{utilService.formatISODate(agendamento.createdAt)}}</p>
+      </button>
+      <div
+        class="flex items-center justify-center px-2 py-1 h-max rounded-full min-h-4 min-w-4 text-white font-medium text-xs"
+        [class]="statusList.get(agendamento.statusId)?.color"
+      >
+        <p class="hidden sm:block">{{statusList.get(agendamento.statusId)?.description}}</p>
+      </div>
+    </div>
+    <button
+      (click)="isActionsOpen = !isActionsOpen"
+      class="flex items-center justify-center border rounded-md h-10 w-10 focus:outline-guide-gray sm:hidden"
+    >
+      <ui-icon [name]="isActionsOpen ? 'x-mark-outline' : 'elipses-vertical-outline'" class="h-5 w-5" />
+    </button>
+    <div
+      [ngClass]="isActionsOpen ? 'grid' : 'hidden'"
+      class="absolute grid-flow-col bg-white gap-2 sm:grid sm:relative"
+    >
+      <button
+        (click)="onActionChoice('updates')"
+        class="flex items-center justify-center border rounded-md h-10 w-10 focus:outline-guide-gray"
+      >
+        <ui-icon name="list-bullet-outline" class="h-5 w-5" />
+      </button>
+      <button
+        (click)="onActionChoice('delete')"
+        class="flex items-center justify-center border rounded-md h-10 w-10 focus:outline-guide-gray"
+      >
+        <ui-icon [name]="agendamento.statusId === 3 ? 'plus-circle-outline' : 'minus-circle-outline'" class="h-5 w-5" />
+      </button>
+      <button
+        (click)="onActionChoice('edit')"
+        [disabled]="agendamento.statusId === 3"
+        class="flex items-center justify-center disabled:opacity-25 border rounded-md h-10 w-10 focus:outline-guide-gray"
+      >
+        <ui-icon name="pencil-square-outnline" class="h-5 w-5" />
+      </button>
+      <button
+        (click)="onActionChoice('interests')"
+        class="flex items-center justify-center border rounded-md h-10 w-10 focus:outline-guide-gray"
+      >
+        <ui-icon name="users-outline" class="h-5 w-5" />
+      </button>
+    </div>
+  </div>
+  @if(isCardOpen) {
+    <div class="relative border rounded-md">
+      <div class="base-item">
+        <p class="w-28 font-bold min-w-28">Data/Hora:</p>
+        <p>
+          {{utilService.formatISODate(agendamento.dataHora)}} -
+        </p>
+      </div>
+      <div class="base-item bg-slate-100">
+        <p class="w-28 font-bold min-w-28">KM Rodados:</p>
+        <p>{{utilService.formatDecimal(agendamento.quilometrosRodados / 100)}} km</p>
+      </div>
+      <div class="base-item">
+        <p class="w-28 font-bold min-w-28">Valor KM:</p>
+        <p>{{agendamento.valorQuilometro / 100 | currency: "BRL"}}</p>
+      </div>
+      <div class="base-item bg-slate-100">
+        <p class="w-28 font-bold min-w-28">Valor Proposto:</p>
+        <p>{{(agendamento.valorQuilometro / 100) * (agendamento.quilometrosRodados / 100) | currency: "BRL"}}</p>
+      </div>
+      <div class="base-item">
+        <p class="w-28 font-bold min-w-28">Cliente:</p>
+        <p>{{agendamento.cliente}}</p>
+      </div>
+      <div class="base-item bg-slate-100">
+        <p class="w-28 font-bold min-w-28">Passageiro:</p>
+        <p>{{agendamento.passageiro}}</p>
+      </div>
+      <div class="base-item">
+        <p class="w-28 font-bold min-w-28">Embarque:</p>
+        <p>{{agendamento.embarque}}</p>
+      </div>
+      <div class="base-item bg-slate-100">
+        <p class="w-28 font-bold min-w-28">Desembarque:</p>
+        <p>{{agendamento.desembarque}}</p>
+      </div>
+      <div class="base-item">
+        <p class="w-28 font-bold min-w-28">Trajeto:</p>
+        <a class="break-all underline text-blue-500" [href]="agendamento.trajeto" target="_blank">
+          <span class="hidden sm:block">{{agendamento.trajeto}}</span>
+          <span class="sm:hidden">Trajeto</span>
+        </a>
+      </div>
+      <div class="base-item bg-slate-100">
+        <p class="w-28 font-bold min-w-28">Motorista:</p>
+        <p [ngClass]="{'text-yellow-500 font-medium' : !agendamento.motorista}">
+          {{agendamento.motorista ? agendamento.motorista.nome : "Não alocado"}}
+        </p>
+      </div>
+      <div class="base-item">
+        <p class="w-28 font-bold min-w-28">Status:</p>
+        <div
+          class="flex items-center justify-center px-2 rounded-full text-white font-medium text-xs"
+          [class]="statusList.get(agendamento.statusId)?.color"
+        >
+          {{statusList.get(agendamento.statusId)?.description}}
+        </div>
+      </div>
+    </div>
+  }
+</div>

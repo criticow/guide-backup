@@ -1,0 +1,23 @@
+<div
+  class="fixed p-4 inset-x-0 top-0 transition-transform"
+  [ngClass]="(isShowing$ | async) ? 'translate-x-0' : 'translate-x-full'"
+>
+  <div class="grid gap-4 p-4 bg-white rounded-md border border-gray-300 shadow-lg">
+    <div class="flex items-center justify-between">
+      <p class="font-medium">{{title$ | async}}</p>
+      <div
+        (click)="closeToast()"
+        class="relative ion-activatable overflow-hidden flex items-center justify-center p-2 rounded-md"
+      >
+        <ui-icon name="x-mark-outline" class="h-5 w-5 text-guide-gray" />
+        <ion-ripple-effect class="text-gray-400"></ion-ripple-effect>
+      </div>
+    </div>
+    <div>
+      <p>{{message$ | async}}</p>
+    </div>
+    <div class="flex items-center w-full px-1 bg-gray-200 rounded-md h-2">
+      <div class="h-1 rounded-md bg-guide-teal" [style.width.%]="(progress$ | async) || 0"></div>
+    </div>
+  </div>
+</div>

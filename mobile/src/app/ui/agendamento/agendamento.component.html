@@ -1,0 +1,191 @@
+<div class="rounded-md bg-white shadow-lg p-4">
+  <div class="flex justify-between">
+    <div class="grid">
+      <p class="font-medium">Agendamento {{agendamento.id}}</p>
+      <p class="text-sm">Criado em: {{utilService.formatISODate(agendamento.createdAt)}}</p>
+    </div>
+    @if(type === 1) {
+      <div
+        (click)="openInteresseTab(agendamento.id)"
+        class="relative ion-activatable flex items-center justify-center p-2 border border-gray-300 rounded-md"
+      >
+        <ui-icon
+          [name]="interesseMap.get(agendamento.id)?.open ? 'clipboard-document-list-outline' : 'users-outline'"
+          class="h-6 w-6"
+        />
+        <ion-ripple-effect class="text-gray-400"></ion-ripple-effect>
+      </div>
+    }
+    @if(type === 2){
+      <div
+        (click)="onClose()"
+        class="relative ion-activatable flex items-center justify-center p-2 border border-gray-300 rounded-md"
+      >
+        <ui-icon
+          name="x-mark-outline"
+          class="h-6 w-6"
+        />
+        <ion-ripple-effect class="text-gray-400"></ion-ripple-effect>
+      </div>
+    }
+    @if(type === 4) {
+      <div
+        (click)="onClose()"
+        class="relative ion-activatable flex items-center justify-center p-2 border bg-red-500 rounded-md"
+      >
+        <p class="text-white">Reset</p>
+        <ion-ripple-effect class="text-gray-400"></ion-ripple-effect>
+      </div>
+    }
+  </div>
+  <div class="relative grid">
+    <div class="py-2 w-max">
+      <p class="text-4xl font-medium">
+        {{(agendamento.quilometrosRodados / 100) * (agendamento.valorQuilometro / 100) | currency: "BRL"}}
+      </p>
+      <p>
+        {{agendamento.valorQuilometro / 100 | currency: "BRL"}} * {{agendamento.quilometrosRodados / 100}} km
+      </p>
+    </div>
+    <div class="border-y py-2">
+      <p class="text-2xl font-medium" [ngClass]="{'text-red-500' : daysRemaining <= 0 && hoursRemaining <= 0 }">
+        {{utilService.formatISODate(agendamento.dataHora)}}
+        <span class="text-sm"> {{minutesRemaining < 0 ? "Vencido" : daysRemaining + "d " + hoursRemaining + "H " + minutesRemaining + "m" }}</span>
+      </p>
+      <p class="text-sm">{{agendamento.cliente}}</p>
+      <p>{{agendamento.passageiro}}</p>
+    </div>
+    <div class="py-2 border-b">
+        <a [href]="agendamento.trajeto" class="text-blue-500 underline flex items-center gap-2">
+          Trajeto
+          <ui-icon name="arrow-top-right-on-square-outline" class="h-4 w-4" />
+        </a>
+        <p class="text-sm text-gray-500">{{agendamento.embarque}}</p>
+        <p class="text-sm font-medium">Viagem de ({{agendamento.quilometrosRodados / 100}} km)</p>
+        <p class="text-sm text-gray-500">{{agendamento.desembarque}}</p>
+    </div>
+    @switch(type) {
+      @case (3) {
+        @if(activeAgendamento$ | async; as activeAgendamento) {
+          <button
+            (click)="onActivate()"
+            [disabled]="agendamento.statusId === 8"
+            [ngClass]="activeAgendamento.id === agendamento.id ? 'bg-red-500' : 'bg-guide-teal'"
+            class="relative ion-activatable disabled:opacity-25 text-white font-bold w-full focus:outline-none rounded-md p-4 py-2"
+          >
+            {{ agendamento.statusId === 8 ? 'Finalizado' : activeAgendamento.id === agendamento.id ? 'Desmarcar como ativo' : 'Marcar como ativo'}}
+            @if(agendamento.statusId === 8) {
+              <ion-ripple-effect />
+            }
+          </button>
+        } @else {
+          <button
+            (click)="onActivate()"
+            [disabled]="agendamento.statusId === 8"
+            class="relative ion-activatable disabled:opacity-25 bg-guide-teal text-white font-bold w-full focus:outline-none rounded-md p-4 py-2"
+          >
+            {{ agendamento.statusId !== 8 ? 'Marcar como ativo' : 'Finalizado'}}
+            @if(agendamento.statusId === 8) {
+              <ion-ripple-effect />
+            }
+          </button>
+        }
+      }
+      @case (4) {
+
+      }
+      @default {
+        <div class="grid grid-cols-2 gap-2 pt-2">
+          <p class="col-span-2 text-center text-lg font-medium">Tem interesse?</p>
+          <button
+            #naoBtn
+            [disabled]="agendamento.naoInteressado"
+            (click)="onChoice('no', agendamento.id)"
+            class="relative ion-activatable bg-red-500 disabled:opacity-25 text-white font-bold w-full focus:outline-none rounded-md p-4 py-2"
+          >
+            Não
+            @if(!naoBtn.disabled) {
+              <ion-ripple-effect />
+            }
+          </button>
+          <button
+            #simBtn
+            [disabled]="agendamento.interessado"
+            (click)="onChoice('yes', agendamento.id)"
+            class="relative ion-activatable bg-guide-teal disabled:opacity-25 text-white font-bold w-full focus:outline-none rounded-md p-4 py-2"
+          >
+            Sim
+            @if(!simBtn.disabled) {
+              <ion-ripple-effect />
+            }
+          </button>
+        </div>
+      }
+    }
+
+    <!-- Motoristas component (agendamentos disponiveis) -->
+    @if(type === 1 && interesseMap.get(agendamento.id)?.open) {
+      <div class="absolute flex flex-col bg-white inset-0 w-full h-full">
+        <div #interestSegment class="relative grid grid-cols-2 mt-2">
+          <div
+            (click)="changeInteresseType(agendamento.id, false)"
+            [ngClass]="{'bg-gray-100' : !interesseMap.get(agendamento.id)?.interessados}"
+            class="relative ion-activatable text-center font-medium p-2"
+          >
+            NÃO
+            <ion-ripple-effect class="text-gray-400" />
+          </div>
+          <div
+            (click)="changeInteresseType(agendamento.id, true)"
+            [ngClass]="{'bg-gray-100' : interesseMap.get(agendamento.id)?.interessados}"
+            class="relative ion-activatable text-center font-medium p-2"
+          >
+            SIM
+            <ion-ripple-effect class="text-gray-400" />
+          </div>
+          <div class="absolute bottom-0 left-0 right-0">
+            <div
+              [ngClass]="{'translate-x-full' : interesseMap.get(agendamento.id)?.interessados}"
+              class="h-1 w-2/4 border-b border-b-guide-gray transition-transform"
+            >
+            </div>
+          </div>
+        </div>
+        <div class="overflow-y-scroll grow">
+          @if(interesseMap.get(agendamento.id)?.interessados) {
+            @for(interesse of agendamento.motoristasInteressados; track interesse.order) {
+              <div class="flex items-center h-max p-2 border-b">
+                <div class="flex rounded-full border">
+                  <ui-icon name="user-circle-outline" class="h-9 w-9" />
+                </div>
+                <p class="ml-2 text-sm">{{interesse.motorista.nome}}</p>
+              </div>
+            }
+          } @else {
+            @for(interesse of agendamento.motoristasNaoInteressados; track interesse.order) {
+              <div class="flex items-center h-max p-2 border-b">
+                <div class="flex rounded-full border">
+                  <ui-icon name="user-circle-outline" class="h-9 w-9" />
+                </div>
+                <p class="ml-2 text-sm">{{interesse.motorista.nome}}</p>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<ui-action-toast
+  (choice)="handleActionToastChoice($event)"
+  [isOpen]="isActionToastOpen"
+  [title]="confirmationTitle"
+>
+  <p class="text-lg text-center">
+    Confirmar opção <span class="font-medium">"{{isInterested ? "SIM" : "NÃO"}}"</span>?
+  </p>
+  <p class="text-lg text-center">
+    Você {{!isInterested ? "não" : ""}} tem interesse no <span class="font-medium">Agendamento {{currentAgendamentoId}}</span>?
+  </p>
+</ui-action-toast>

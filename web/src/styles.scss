@@ -1,0 +1,38 @@
+/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/Inter-VariableFont.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/Inter-VariableFont.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+}
+
+body {
+  @apply text-guide-gray bg-slate-100;
+}
+
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+.basic-input {
+  @apply bg-gray-50 border border-l-4 border-l-guide-gray border-gray-300 rounded-md text-sm placeholder:text-xs placeholder:text-gray-400 w-full focus:outline-none focus:border-guide-gray focus:ring-guide-gray;
+}
+
+.ng-valid:not(form) {
+  @apply border-l-4 border-l-green-500;
+}
+
+.ng-invalid:not(form) {
+  @apply border-l-4 border-l-red-500;
+}

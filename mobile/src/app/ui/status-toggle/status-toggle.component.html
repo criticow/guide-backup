@@ -1,0 +1,27 @@
+<ng-container *ngIf="motorista$ | async as motorista">
+  <p class="text-sm font-medium mb-1">{{motorista.online ? "Online" : "Offline"}}</p>
+  <div
+    (click)="handleConfirmation()"
+    class=" h-6 w-10 p-1 rounded-full"
+    [ngClass]="motorista.online ? 'bg-green-500' : 'bg-red-500'"
+  >
+    <div
+      class="rounded-full h-4 w-4 bg-white transition-transform"
+      [ngClass]="motorista.online ? 'translate-x-full' : 'translate-x-0'"
+    >
+    </div>
+  </div>
+  
+  <ui-action-toast
+    (choice)="handleChoice($event)"
+    [isOpen]="isConfirming"
+    [title]="confirmationTitle"
+  >
+    <p class="text-lg text-center">
+      Mudar status para <span class="font-medium">{{ motorista.online ? "Offline" : "Online" }}?</span>
+    </p>
+    <p class="text-sm text-center font-medium">
+      {{motorista.online ? "Você não receberá notificações de agendamentos" : "Você receberá notificações de agendamentos"}}
+    </p>
+  </ui-action-toast>
+</ng-container>

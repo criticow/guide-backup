@@ -1,0 +1,21 @@
+<div
+  (click)="isMenuOpen = !isMenuOpen"
+  class="flex items-center justify-center h-8 w-8 border rounded-md bg-white m-4 lg:hidden"
+>
+  <ui-icon name="bars-3-bottom-left-outline" class="h-6 w-6" />
+</div>
+@if(isMenuOpen) {
+  <div (click)="isMenuOpen = !isMenuOpen" class="absolute inset-0 bg-black opacity-25 z-50"></div>
+}
+<aside
+  class="fixed flex flex-col shadow-xl left-0 top-0 p-4 w-64 h-screen z-50 bg-white transition-transform -translate-x-full lg:translate-x-0"
+  [ngClass]="{'translate-x-0' : isMenuOpen}"
+>
+  <div class="flex gap-2 items-center py-2 border-b border-b-guide-gray">
+    <ui-icon name="guide-logo" class="h-8 w-8 text-guide-teal" />
+    <p class="font-bold text-2xl text-guide-gray">GUIDE</p>
+  </div>
+  <ul class="grow py-2">
+    <li routerLink="/agendamentos" class="bg-guide-gray text-white px-4 py-2 rounded-md text-sm">Agendamentos</li>
+  </ul>
+</aside>

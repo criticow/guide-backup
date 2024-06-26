@@ -1,0 +1,25 @@
+@if(isOpen && title) {
+  <div class="fixed top-0 left-0 w-full h-screen z-[60] p-4 flex items-center justify-center">
+    <div class="absolute bg-black opacity-15 w-full h-full"></div>
+    <div class="relative grid gap-4 rounded-md bg-white p-4">
+      <p class="text-center text-lg font-medium border-b border-b-gray-300 pb-2">{{title}}</p>
+      <ng-content></ng-content>
+      <div class="grid grid-cols-2 gap-4 border-t border-t-gray-300 pt-2">
+        <button
+          (click)="onChoice('cancel')"
+          class="relative ion-activatable bg-red-500 disabled:opacity-25 text-white font-bold w-full focus:outline-none rounded-md p-4 py-2"
+        >
+          Cancelar
+          <ion-ripple-effect></ion-ripple-effect>
+        </button>
+        <button
+          (click)="onChoice('confirm')"
+          class="relative ion-activatable bg-guide-teal disabled:opacity-25 text-white font-bold w-full focus:outline-none rounded-md p-4 py-2"
+        >
+          Confirmar
+          <ion-ripple-effect></ion-ripple-effect>
+        </button>
+      </div>
+    </div>
+  </div>
+}

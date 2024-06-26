@@ -1,0 +1,155 @@
+<ion-content class="ion-bg-slate-100">
+  <div class="flex flex-col items-center justify-center h-full px-8 pt-2 pb-4">
+    <!-- Logo -->
+    <div class="flex items-center justify-center">
+      <ui-icon name="guide-logo" class="h-10 w-10 text-guide-teal" />
+      <p class="font-bold text-3xl text-guide-gray ml-2">GUIDE</p>
+    </div>
+    <form class="flex flex-col w-full mt-12">
+      <!-- CPF Input -->
+      <div class="w-full order-1">
+        <label for="cpf" class="block mb-1 text-sm font-medium text-guide-gray">CPF</label>
+        <div class="relative">
+          <input
+            #cpfInput
+            tabindex="1"
+            placeholder="000.000.000-00"
+            type="text"
+            [(ngModel)]="cpf"
+            id="cpf"
+            name="cpf"
+            inputmode="numeric"
+            mask="000.000.000-00"
+            class="p-2.5 pr-7 bg-gray-50 border border-gray-300 text-guide-gray text-sm rounded-md focus:outline-none focus:ring-0 focus:border-blue-500 block w-full"
+          />
+          @if(cpf) {
+            <div
+              (click)="cpf = ''; cpfInput.focus()"
+              class="ion-activatable absolute flex items-center p-2.5 right-0 top-0 h-full rounded-r-md"
+            >
+              <ui-icon name="x-circle-outline" class="h-4 w-4 text-guide-gray"/>
+              <ion-ripple-effect class="text-gray-400"></ion-ripple-effect>
+            </div>
+          }
+        </div>
+      </div>
+      <!-- Senha Input -->
+      <div class="w-full mt-2 order-3">
+        <label for="senha" class="block mb-1 text-sm font-medium text-guide-gray">Senha</label>
+        <div class="flex">
+          <div class="relative w-full">
+            <input
+              #senhaInput
+              tabindex="3"
+              placeholder="Senha de acesso"
+              [type]="isSenhaVisible ? 'text' : 'password'"
+              [(ngModel)]="senha"
+              id="senha"
+              name="senha"
+              class="p-2.5 pr-7 bg-gray-50 border border-gray-300 text-guide-gray text-sm rounded-md focus:outline-none focus:ring-0 focus:border-blue-500 block w-full"
+            />
+            @if(senha) {
+              <div
+                (click)="senha = ''; senhaInput.focus()"
+                class="ion-activatable absolute flex items-center p-2.5 right-0 top-0 h-full rounded-r-md"
+              >
+                <ui-icon name="x-circle-outline" class="h-4 w-4 text-guide-gray"/>
+                <ion-ripple-effect class="text-gray-400"></ion-ripple-effect>
+              </div>
+            }
+          </div>
+          <div
+            (click)="toggleVisibility(1, senhaInput)"
+            class="relative ion-activatable flex items-center justify-center p-2.5 border bg-gray-50 border-gray-300 rounded-md ml-2">
+            <ui-icon [name]="isSenhaVisible ? 'eye-slash-outline' : 'eye-outline'" class="w-5 h-5" />
+            <ion-ripple-effect class="text-gray-400"></ion-ripple-effect>
+          </div>
+        </div>
+      </div>
+      @if(isCreatingPassword) {
+        <!-- Data de Nascimento Input -->
+        <div class="w-full mt-2 order-2">
+          <label for="dataNascimento" class="block mb-1 text-sm font-medium text-guide-gray">Data de Nascimento</label>
+          <div class="relative">
+            <input
+              #dataNascimentoInput
+              tabindex="2"
+              placeholder="DD/MM/AAAA"
+              type="text"
+              [(ngModel)]="dataNascimento"
+              id="dataNascimento"
+              name="dataNascimento"
+              mask="d0/M0/0000"
+              inputmode="numeric"
+              class="p-2.5 pr-7 bg-gray-50 border border-gray-300 text-guide-gray text-sm rounded-md focus:outline-none focus:ring-0 focus:border-blue-500 block w-full"
+            />
+            @if(dataNascimento) {
+              <div
+                (click)="dataNascimento = ''; dataNascimentoInput.focus()"
+                class="ion-activatable absolute flex items-center p-2.5 right-0 top-0 h-full rounded-r-md"
+              >
+                <ui-icon name="x-circle-outline" class="h-4 w-4 text-guide-gray"/>
+                <ion-ripple-effect class="text-gray-400"></ion-ripple-effect>
+              </div>
+            }
+          </div>
+        </div>
+        <!-- Confirmar Senha Input -->
+        <div class="w-full mt-2 order-4">
+          <label for="senha2" class="block mb-1 text-sm font-medium text-guide-gray">Confirmar Senha</label>
+          <div class="flex">
+            <div class="relative w-full">
+              <input
+                #senha2Input
+                tabindex="4"
+                placeholder="Repetir senha de acesso"
+                [type]="isSenha2Visible ? 'text' : 'password'"
+                [(ngModel)]="senha2"
+                id="senha2"
+                name="senha2"
+                class="p-2.5 pr-7 bg-gray-50 border border-gray-300 text-guide-gray text-sm rounded-md focus:outline-none focus:ring-0 focus:border-blue-500 block w-full"
+              />
+              @if(senha2) {
+                <div
+                  (click)="senha2 = ''; senha2Input.focus()"
+                  class="ion-activatable absolute flex items-center p-2.5 right-0 top-0 h-full rounded-r-md"
+                >
+                  <ui-icon name="x-circle-outline" class="h-4 w-4 text-guide-gray"/>
+                  <ion-ripple-effect class="text-gray-400"></ion-ripple-effect>
+                </div>
+              }
+            </div>
+            <div
+              (click)="toggleVisibility(2, senha2Input)"
+              class="relative ion-activatable flex items-center justify-center p-2.5 border bg-gray-50 border-gray-300 rounded-md ml-2">
+              <ui-icon [name]="isSenha2Visible ? 'eye-slash-outline' : 'eye-outline'" class="w-5 h-5" />
+              <ion-ripple-effect class="text-gray-400"></ion-ripple-effect>
+            </div>
+          </div>
+        </div>
+      }
+      <!-- Submit Button -->
+      <button
+        #submitBtn
+        [disabled]="!isFormValid()"
+        (click)="handleSubmit()"
+        class="relative ion-activatable disabled:opacity-25 bg-guide-teal text-white font-bold w-full focus:outline-none rounded-md p-4 py-2 mt-10 order-last"
+      >
+        {{isCreatingPassword ? 'Salvar' : 'Acessar'}}
+        @if(!submitBtn.disabled) {
+          <ion-ripple-effect />
+        }
+      </button>
+    </form>
+    <!-- Login / Register switch -->
+    <p
+      (click)="changeView()"
+      class="text-sm font-medium text-blue-500 underline mt-12 text-center"
+    >
+      {{isCreatingPassword ? 'Voltar' : 'Cadastrar/Alterar Senha'}}
+    </p>
+    @if(appVersion) {
+      <p class="font-medium text-sm mt-4">Versão: {{appVersion}}</p>
+    }
+  </div>
+</ion-content>

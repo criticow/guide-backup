@@ -1,0 +1,54 @@
+<div class="grid gap-2 px-4 py-2 mt-[4.5rem] bg-slate-100">
+  <div class="flex justify-between items-center px-4 py-2 bg-white rounded-md">
+    <p>Agendamentos Disponíveis</p>
+    <button 
+      (click)="loadCorridas()"
+      class="relative ion-activatable flex p-2 bg-white rounded-md focus:outline-none overflow-hidden">
+      <ui-icon name="arrow-path-outline" class="h-4 w-4 text-black" />
+      <ion-ripple-effect class="text-gray-400"></ion-ripple-effect>
+    </button>
+  </div>
+
+  <div class="grid grid-flow-col auto-cols-max gap-2">
+    <div
+      (click)="updateFilter('todos')"
+      [ngClass]="(filter$ | async)?.sim && (filter$ | async)?.nao && (filter$ | async)?.pendente ? 'bg-gray-300' : 'bg-gray-200 text-gray-400'"
+      class="ion-activatable relative p-2 px-3 rounded-lg w-max text-sm overflow-hidden">
+      Todos
+      <ion-ripple-effect class="text-gray-50"></ion-ripple-effect>
+    </div>
+    <div 
+      (click)="updateFilter('sim')"
+      [ngClass]="(filter$ | async)?.sim ? 'bg-gray-300' : 'bg-gray-200 text-gray-400'"
+      class="ion-activatable relative p-2 px-3 rounded-lg w-max text-sm overflow-hidden">
+      Sim
+      <ion-ripple-effect class="text-gray-50"></ion-ripple-effect>
+    </div>
+    <div
+      (click)="updateFilter('nao')"
+      [ngClass]="(filter$ | async)?.nao ? 'bg-gray-300' : 'bg-gray-200 text-gray-400'"
+      class="ion-activatable relative p-2 px-3 rounded-lg w-max text-sm overflow-hidden">
+      Não
+      <ion-ripple-effect class="text-gray-50"></ion-ripple-effect>
+    </div>
+    <div 
+      (click)="updateFilter('pendente')"
+      [ngClass]="(filter$ | async)?.pendente ? 'bg-gray-300' : 'bg-gray-200 text-gray-400'"
+      class="ion-activatable relative p-2 px-3 rounded-lg w-max text-sm overflow-hidden">
+      Pendente
+      <ion-ripple-effect class="text-gray-50"></ion-ripple-effect>
+    </div>
+  </div>
+</div>
+
+<ion-content class="ion-bg-slate-100">
+  <div class="grid gap-4 px-4 pt-2 pb-28">
+    @for(agendamento of agendamentos$ | async; track agendamento.id) {
+      <ui-agendamento [type]="1" [agendamento]="agendamento" (choice)="handleInterestChoice($event)" />
+    } @empty {
+      <div class="flex flex-col gap-4 border shadow-lg text-center rounded-md bg-white w-full p-12">
+        <p>Nenhum agendamento disponível no momento, você será notificado quando novos agendamentos forem lançados.</p>
+      </div>
+    }
+  </div>
+</ion-content>

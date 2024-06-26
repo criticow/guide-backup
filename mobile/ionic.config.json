@@ -1,0 +1,7 @@
+{
+  "name": "Guide",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

@@ -1,0 +1,21 @@
+<div class="fixed inset-0 flex items-center justify-center z-50">
+  <div class="absolute inset-0 bg-black opacity-25 z-50"></div>
+  <div class="relative grid gap-4 p-4 bg-white z-50 rounded-md">
+    <p class="text-sm font-medium text-center">{{title}}</p>
+    <ng-content></ng-content>
+    <div class="flex justify-center gap-4">
+      <button
+        (click)="onChoice('cancel')"
+        class="rounded-md bg-red-500 disabled:opacity-25 text-white text-sm font-medium px-4 py-2 focus:outline-guide-gray"
+      >
+        Cancelar
+      </button>
+      <button
+        (click)="onChoice('confirm')"
+        class="rounded-md bg-guide-teal disabled:opacity-25 text-white text-sm font-medium px-4 py-2 focus:outline-guide-gray"
+      >
+        Confirmar
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,53 @@
+<div class="p-4 lg:p-12 lg:ml-64 2xl:flex 2xl:justify-center">
+  <div class="rounded-md bg-white p-4 shadow-lg h-[calc(100vh_-_6rem)] lg:h-[calc(100vh_-_6rem)] 2xl:w-3/4">
+    <div class="flex flex-col gap-4 h-full">
+      <h1 class="font-bold text-xl">- Agendamentos -</h1>
+      <div class="flex justify-end">
+        <div class="flex gap-4">
+          <button
+            (click)="loadAgendamentos()"
+            class="rounded-md bg-guide-gray disabled:opacity-25 text-white text-sm font-medium px-4 py-2 focus:outline-guide-gray"
+          >
+            Atualizar
+          </button>
+          <button
+            (click)="openAgendamentoModal()"
+            class="rounded-md bg-guide-gray disabled:opacity-25 text-white text-sm font-medium px-4 py-2 focus:outline-guide-gray"
+          >
+            Novo
+          </button>
+        </div>
+      </div>
+      <div class="grid gap-4 grow auto-rows-max overflow-y-auto">
+        @for(agendamento of agendamentos$ | async; track agendamento.id) {
+          <ui-agendamento-card
+            [agendamento]="agendamento"
+            (actionChoice)="handleActionChoice($event, agendamento)"
+          />
+        } @empty {
+          <p class="text-center mt-10">Nenhum agendamento há ser exibido no momento.</p>
+        }
+      </div>
+    </div>
+</div>
+
+@if(isAgendamentoModalOpen) {
+  <ui-agendamento-modal
+    [agendamentoId]="currentAgendamento?.id || null"
+    (close)="handleCloseAgendamentoModal()"
+  />
+}
+
+@if(isDeleteConfirmationOpen && currentAgendamento) {
+  <ui-action-toast title="Confirmar ação!" (choice)="handleConfirmationChoice($event)">
+    <p class="text-center max-w-56">
+      Deseja <span class="font-bold">{{currentAgendamento.statusId === 3 ? 'ATIVAR' : 'CANCELAR'}}</span> o agendamento
+      <span class="font-bold"> {{currentAgendamento.id}}</span>?
+    </p>
+  </ui-action-toast>
+}
+
+<!-- @if(isInterestViewerOpen && currentAgendamento) { -->
+@if(isInterestViewerOpen && currentAgendamento) {
+  <ui-agendamento-interest-viewer [agendamentoId]="currentAgendamento.id" (close)="handleCloseInterestViewer()" />
+}
